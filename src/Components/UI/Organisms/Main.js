@@ -14,7 +14,7 @@ function Main() {
 
         <main>
             <Router>
-                <Cards path = "/AnimeSearch/"/>
+                <Cards path = "/"/>
                 <Details path = {`/details/:id`}/>
             </Router>
         </main>
