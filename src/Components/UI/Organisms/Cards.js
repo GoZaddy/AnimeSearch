@@ -25,38 +25,20 @@ function Cards() {
     const [isLoading, setIsLoading] = useState(false);
 
     async function fetchData() {
-        setCardsDisplayed([]);
-
+           
         setUrl(`https://api.jikan.moe/v3/search/anime?q=${animeName}&limit=12`);
         let response = await fetch(urli);
         let data = await response.json();
         let results = await data.results;
-
         return results;
-
-
+        
+            
     }
     useEffect(() => {
-        async function setCards() {
-            setIsLoading(true);
+        async function setCards(){
             setCardsDisplayed([]);
-            setUrl(`https://api.jikan.moe/v3/search/anime?q=${animeName}&limit=12`);
-            let response = await fetch(urli);
-            let data = await response.json();
-            let results = await data.results;
-            
-            //let results = await fetchData();
-            setIsLoading(false);
-            console.log(await results);
-            console.log("url: " + urli);
-            console.log("animeName:" + animeName);
-
-            /*if(results.length === 0 && animeName === ""){
-                setIsLoading(false)
-            }
-            else if(results.length > 0){
-                setIsLoading(false)
-            }*/
+            let results = await fetchData();
+            results.length > 0 ? setIsLoading(false) : setIsLoading(true)
             setCardsDisplayed(results.map(
                 animeObject => <Card
                     key={animeObject.mal_id}
@@ -70,52 +52,47 @@ function Cards() {
                     rated={animeObject.rated}
                 />)
             );
-            
-            
-
+    
         }
         setCards();
 
-
-
-        return (() => {
+        
+        
+        return(() => {
             setCardsDisplayed([]);
-            setUrl("");
+            
         })
 
 
 
+        
 
-
-    }, [ animeName]);
+    }, [urli,animeName ]);
 
 
 
     return (
 
         <div>
-            <code>{JSON.stringify(isLoading, null, 4)}</code>
-            <Text type="resultText" value={`Search results for ${animeName}`} />
-            {isLoading ?
-                <Loader
-                    style={loadingStyle}
-                    type="ThreeDots"
-                    color="#5262F2"
-                    height={100}
-                    width={100}
-                    timeout={0} />
-                :
-                <CardGrid path="/" >
-
-                    {
-                        arrayOfCards
-                    }
-
-
-                </CardGrid>
-
-
+            <Text path="/text" type="resultText" value={`Search results for ${animeName}`} />
+            {isLoading && animeName !== "" 
+                                        && 
+                                        <Loader
+                                            style = {loadingStyle} 
+                                            type = "ThreeDots"
+                                            color = "#5262F2"
+                                            height = {100}
+                                            width = {100}
+                                            timeout = {0}/>
             }
+            <CardGrid path="/" >
+
+                {
+                    arrayOfCards
+                }
+
+
+            </CardGrid>
 
         </div>
     );

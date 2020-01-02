@@ -3,7 +3,6 @@ import React from "react";
 import Details from "./Details";
 
 import Cards from "./Cards";
-
 import { Router } from "@reach/router";
 
 

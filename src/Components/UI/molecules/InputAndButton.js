@@ -34,15 +34,13 @@ function Form() {
 
     const [anime, setAnime] = useContext(AnimeContext);
     const [searchedAnime, setSearchedAnime] = useState("");
-
-    const buttonClickHandler = (e) => {
-        e.preventDefault();
-        setAnime(searchedAnime);
-    }
     return (
         <StyledForm key="1">
             <Input type="text" placeholder="Search anime" value={searchedAnime} onChange={e => setSearchedAnime(e.currentTarget.value)} />
-            <Button buttonText="Search" onClick={buttonClickHandler}></Button>
+            <Button buttonText="Search" onClick={(e) => {
+                e.preventDefault();
+                setAnime(searchedAnime);
+            }}></Button>
         </StyledForm>
     );
 }
