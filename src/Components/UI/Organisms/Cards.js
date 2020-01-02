@@ -3,6 +3,7 @@ import Text from "./../atoms/Text";
 import AnimeContext from "./../../../AnimeContext";
 import styled from "styled-components";
 import Card from "./../molecules/Card";
+import Loader from "react-loader-spinner";
 
 
 const CardGrid = styled.div`
@@ -23,14 +24,20 @@ function Cards() {
     const [arrayOfCards, setCardsDisplayed] = useState();
     const [isLoading, setIsLoading] = useState(false);
 
-
-    useEffect(() => {
-        async function fetchData() {
+    async function fetchData() {
            
-            setUrl(`https://api.jikan.moe/v3/search/anime?q=${animeName}&limit=12`);
-            let response = await fetch(urli);
-            let data = await response.json();
-            let results = await data.results;
+        setUrl(`https://api.jikan.moe/v3/search/anime?q=${animeName}&limit=12`);
+        let response = await fetch(urli);
+        let data = await response.json();
+        let results = await data.results;
+        return results;
+        
+            
+    }
+    useEffect(() => {
+        async function setCards(){
+            setCardsDisplayed([]);
+            let results = await fetchData();
             results.length > 0 ? setIsLoading(false) : setIsLoading(true)
             setCardsDisplayed(results.map(
                 animeObject => <Card
@@ -45,23 +52,22 @@ function Cards() {
                     rated={animeObject.rated}
                 />)
             );
-
-            
-            return(() => {
-                setCardsDisplayed([]);
-                results = [];
-            })
-            
+    
         }
-
-        fetchData();
-        
-
-
+        setCards();
 
         
+        
+        return(() => {
+            setCardsDisplayed([]);
+            
+        })
 
-    }, [animeName, urli]);
+
+
+        
+
+    }, [urli,animeName ]);
 
 
 
@@ -69,7 +75,16 @@ function Cards() {
 
         <div>
             <Text path="/text" type="resultText" value={`Search results for ${animeName}`} />
-            {isLoading && animeName !== "" && <h1 style = {loadingStyle}>Loading...</h1>}
+            {isLoading && animeName !== "" 
+                                        && 
+                                        <Loader
+                                            style = {loadingStyle} 
+                                            type = "ThreeDots"
+                                            color = "#5262F2"
+                                            height = {100}
+                                            width = {100}
+                                            timeout = {0}/>
+            }
             <CardGrid path="/" >
 
                 {
